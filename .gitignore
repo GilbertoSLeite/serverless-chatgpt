@@ -1,0 +1,33 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+
+# Dist directories
+.webpack
+
+#Phpstorm
+.idea
+
+#config locais
+config/env.local.yml
+config/env.dev.yml
+config/env.prod.yml
+config/env.qa.yml
+config/env.staging.yml
+config/aws/credentials
+
+#Visual Studio Code
+.vscode
+
+#config
+# serverless.yml
+
+
+# Teste Coverage
+coverage
+.nyc_output
+
+package-lock.json

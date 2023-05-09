@@ -1,0 +1,42 @@
+service: altu-chatgpt
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  endpointType: REGIONAL
+  stage: ${opt:stage, 'local'}
+  runtime: nodejs16.x
+  region: sa-east-1
+  environment:
+    OPENAI_API_KEY: 30444d6e3c5a4f678228353a35624a40
+    BASE_PATH: https://openai-srvc-eastus.openai.azure.com/openai/deployments/gpt-35-turbo
+    API_VERSION: 2023-03-15-preview
+    BUCKET_AWS: altuclients
+    KEY_AWS: chatgpt/poc/MANUAL_DO_CORRETO_AUTO.pdf
+    HTTP_DOCS: https://altuclients.s3.sa-east-1.amazonaws.com/chatgpt/poc/MANUAL_DO_CORRETO_AUTO.pdf
+    LOCAL_DOCS: /home/gilberto/Documentos/Developer/zenvia/serverless-chatgpt/commons/docs/MANUAL_DO_CORRETO_AUTO.pdf
+    
+  versionFunctions: false
+  timeout: 30
+  memorySize: 128  
+
+functions:
+  - ${file(./services/config.yml):functions}
+
+custom:
+  customDomain: ${file(./services/config.yml):customDomain}
+  serverless-offline:
+    host: 127.0.0.1
+    port: 3000
+    noPrependStageInUrl: true
+  binary:
+    types:
+      - '*/*' # permitir o tipo de conteúdo de qualquer payload
+    maxSize: 10 # definir o tamanho máximo da carga útil em MB
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-optimize
+  - serverless-domain-manager
+  - serverless-plugin-typescript

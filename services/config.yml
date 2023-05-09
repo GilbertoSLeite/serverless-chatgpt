@@ -1,0 +1,13 @@
+functions:
+  openai:
+    handler: services/openai/index.handler
+    events:
+      - http:
+          path: services/openai
+          method: GET
+          cors: true
+
+customDomain:
+  domainName: 'api.altu.com.br'
+  basePath: 'chatgpt-${self:provider.stage}'
+  stage: ${self:provider.stage}
