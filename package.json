@@ -20,6 +20,7 @@
   "author": "Gilberto Leite",
   "license": "ISC",
   "dependencies": {
+    "@azure/search-documents": "^11.3.1",
     "@types/aws-lambda": "^8.10.114",
     "@types/body-parser": "^1.19.2",
     "@types/chai": "^4.3.4",
@@ -45,6 +46,7 @@
     "pdf-parse": "^1.1.1",
     "serverless": "^3.23.0",
     "serverless-plugin-typescript": "^2.1.4",
+    "uuidv4": "^6.2.13",
     "winston": "^3.8.2"
   },
   "devDependencies": {

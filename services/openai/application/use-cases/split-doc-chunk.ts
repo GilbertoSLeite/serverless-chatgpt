@@ -9,13 +9,12 @@ export default class SplitDocChunk {
     this.httpResponse = new HttpResponseTypeAdapterFactoryImplementation();
   }
 
-  public async splicDocChunk(docsConvertedPdfToTxt: string) {
+  public async splicDocChunk(docsConvertedPdfToTxt: string): Promise<any[] | object> {
     try {
       const textSplitter = new RecursiveCharacterTextSplitter({ 
         chunkSize: 1000 
       });
 
-      console.log(`Tipo do Arquivo: ${typeof docsConvertedPdfToTxt}`);
       const docs = await textSplitter.createDocuments([docsConvertedPdfToTxt]);
       return docs;
     } catch (error: any) {

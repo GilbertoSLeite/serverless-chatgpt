@@ -11,7 +11,6 @@ class SplitDocChunk {
             const textSplitter = new text_splitter_1.RecursiveCharacterTextSplitter({
                 chunkSize: 1000
             });
-            console.log(`Tipo do Arquivo: ${typeof docsConvertedPdfToTxt}`);
             const docs = await textSplitter.createDocuments([docsConvertedPdfToTxt]);
             return docs;
         }
