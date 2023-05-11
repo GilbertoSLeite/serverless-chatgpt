@@ -8,7 +8,7 @@ const convert_pdf_txt_1 = __importDefault(require("../../application/use-cases/c
 const define_schema_of_indexers_1 = __importDefault(require("../../application/use-cases/define-schema-of-indexers"));
 const sending_index_cognitive_search_1 = __importDefault(require("../../application/use-cases/sending-index-cognitive-search"));
 const split_doc_chunk_1 = __importDefault(require("../../application/use-cases/split-doc-chunk"));
-const configuration_openai_1 = __importDefault(require("../../frameworks/adapters/configuration-openai"));
+const configuration_openai_1 = __importDefault(require("../../../conversation-openai/frameworks/adapters/configuration-openai"));
 const request_http_document_1 = __importDefault(require("../../frameworks/adapters/request-http-document"));
 const request_s3_document_1 = __importDefault(require("../../frameworks/adapters/request-s3-document"));
 const template_response_insert_document_1 = __importDefault(require("../models/template-response-insert-document"));
@@ -30,11 +30,10 @@ class DownloadConvertPDFToTxt {
             // const downloadPdf = await this.requestHttpDocunt.requestHttpDocument();
             // if(!downloadPdf) return this.httpResponse.notFoundResponse().getResponse('Arquivo Não Encontrado');
             const docsConverted = await this.convertPdfTxt.convertPdfToTxt(filePath);
-            const docsInTxt = await this.splitDocChunk.splicDocChunk(docsConverted);
-            const entitiesIndexChunks = await this.defineSchemaIndexers.defineSchemaIndexers(docsInTxt);
+            const docsInChunk = await this.splitDocChunk.splicDocChunk(docsConverted);
+            const entitiesIndexChunks = await this.defineSchemaIndexers.defineSchemaIndexers(docsInChunk);
             const sentDocsToCognitive = await this.updloadIndexToCognitive.sedingIndexCognitiveSearch(entitiesIndexChunks);
-            const modelingResultInsertDoc = this.templateResponseInsertDocument.modelResults(sentDocsToCognitive);
-            return modelingResultInsertDoc;
+            return sentDocsToCognitive;
         }
         catch (error) {
             const { message } = error;

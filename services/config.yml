@@ -11,7 +11,7 @@ functions:
     events:
       - http:
           path: services/conversation-openai
-          method: GET
+          method: POST
           cors: true
           
 customDomain:

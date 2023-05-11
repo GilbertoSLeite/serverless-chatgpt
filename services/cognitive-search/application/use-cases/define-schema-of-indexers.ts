@@ -14,7 +14,7 @@ export default class DefineSchemaIndexers {
     try {
       const arrayPromise = [];
       for (const iteratorDocument of documentFormatText) {
-        const promisesIndexSchema = this.indexSchema.setTitleContent('Bradesco', iteratorDocument);
+        const promisesIndexSchema = this.indexSchema.setTitleContent('Manual do Correto', iteratorDocument.pageContent);
         arrayPromise.push(promisesIndexSchema);
       }
       const entityIndexers = await Promise.all(arrayPromise);

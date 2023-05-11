@@ -3,7 +3,7 @@ import ConvertPdfToTxt from "../../application/use-cases/convert-pdf-txt";
 import DefineSchemaIndexers from "../../application/use-cases/define-schema-of-indexers";
 import SendingIndexCognitiveSearch from "../../application/use-cases/sending-index-cognitive-search";
 import SplitDocChunk from "../../application/use-cases/split-doc-chunk";
-import ConfigurationOpenai from "../../frameworks/adapters/configuration-openai";
+import ConfigurationOpenai from "../../../conversation-openai/frameworks/adapters/configuration-openai";
 import RequestHTTPDocument from "../../frameworks/adapters/request-http-document";
 import RequestS3Document from "../../frameworks/adapters/request-s3-document";
 import TemplateResponseInsertDocument from "../models/template-response-insert-document";
@@ -39,11 +39,10 @@ export default class DownloadConvertPDFToTxt {
       // const downloadPdf = await this.requestHttpDocunt.requestHttpDocument();
       // if(!downloadPdf) return this.httpResponse.notFoundResponse().getResponse('Arquivo Não Encontrado');
       const docsConverted = await this.convertPdfTxt.convertPdfToTxt(filePath);
-      const docsInTxt: any = await this.splitDocChunk.splicDocChunk(docsConverted);
-      const entitiesIndexChunks: any = await this.defineSchemaIndexers.defineSchemaIndexers(docsInTxt);
+      const docsInChunk: any = await this.splitDocChunk.splicDocChunk(docsConverted);
+      const entitiesIndexChunks: any = await this.defineSchemaIndexers.defineSchemaIndexers(docsInChunk);
       const sentDocsToCognitive: any = await this.updloadIndexToCognitive.sedingIndexCognitiveSearch(entitiesIndexChunks);
-      const modelingResultInsertDoc = this.templateResponseInsertDocument.modelResults(sentDocsToCognitive);
-      return modelingResultInsertDoc;
+      return sentDocsToCognitive;
     } catch (error: any) {
       const { message } = error;
       const errorResponse = this.httpResponse.internalServerErrorResponse().getResponse(message);

@@ -1,14 +1,23 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_response_type_adapter_factory_1 = require("../../../../commons/http-response/http-response-type-adapter-factory");
+const start_conversation_openai_1 = __importDefault(require("../../application/use-cases/start-conversation-openai"));
 class IdentifyLastTalk {
     constructor() {
         this.httpResponse = new http_response_type_adapter_factory_1.HttpResponseTypeAdapterFactoryImplementation();
+        this.triggerConversation = new start_conversation_openai_1.default();
     }
-    async identifyLastTalk(queryStringParameters, context) {
+    async identifyLastTalk(body, context) {
         try {
-            const sizeConversation = queryStringParameters.conversation.length || 0;
-            if (sizeConversation === 1) { }
+            const bodyParsed = JSON.parse(body);
+            const { conversation } = bodyParsed;
+            const arrayConversation = JSON.stringify(conversation).split(",");
+            const sizeConversation = arrayConversation.length || 0;
+            if (sizeConversation === 1)
+                return await this.triggerConversation.startingConversationOpenai(conversation, context);
             if (sizeConversation > 1) { }
             const responseNotFound = this.httpResponse.notFoundResponse().getResponse('No conversation has been sent');
             return context.succeed(responseNotFound);

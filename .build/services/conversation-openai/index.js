@@ -10,8 +10,8 @@ const httpResponse = new http_response_type_adapter_factory_1.HttpResponseTypeAd
 const identifyLastTalk = new identify_last_talk_1.default();
 const handler = async (event, context) => {
     try {
-        const { queryStringParameters } = event;
-        const response = identifyLastTalk.identifyLastTalk(queryStringParameters, context);
+        const { body } = event;
+        const response = identifyLastTalk.identifyLastTalk(body, context);
         return httpResponse.successResponse().getResponse(JSON.stringify(response));
     }
     catch (error) {
