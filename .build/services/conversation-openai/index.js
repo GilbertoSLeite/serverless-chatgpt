@@ -12,7 +12,7 @@ const handler = async (event, context) => {
     try {
         const { body } = event;
         const response = await identifyLastTalk.identifyLastTalk(body, context);
-        return httpResponse.successResponse().getResponse(JSON.stringify(response));
+        return httpResponse.successResponse().getResponse(JSON.stringify(response.replace(/\n/g, ' ')));
     }
     catch (error) {
         const { message } = error;

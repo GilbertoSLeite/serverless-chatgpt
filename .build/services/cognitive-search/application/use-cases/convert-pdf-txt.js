@@ -14,7 +14,6 @@ class ConvertPdfToTxt {
             const docsConvertedPdfToTxt = await loader.load();
             const pageContent = docsConvertedPdfToTxt[0].pageContent;
             return pageContent.replace(/\n/g, ' ');
-            ;
         }
         catch (error) {
             const { message } = error;
