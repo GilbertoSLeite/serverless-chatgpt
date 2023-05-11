@@ -27,6 +27,7 @@ export class CognitiveSearch {
       try {
         const resultsQuery: any[] = [];
           const query = (conversation.length === 1 ? conversation[0] : conversation.join(','));
+          console.log(`query: ${JSON.stringify(query, null, 2)}`);
           const searchOptions = {
             includeTotalCount: true,
             top: 3,
