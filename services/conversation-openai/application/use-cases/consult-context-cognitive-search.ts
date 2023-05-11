@@ -1,10 +1,12 @@
-import { SearchClient, AzureKeyCredential } from '@azure/search-documents';
+import { AzureKeyCredential, SearchClient } from "@azure/search-documents";
 import { HttpResponseTypeAdapterFactoryImplementation } from '../../../../commons/http-response/http-response-type-adapter-factory';
 
-const SEARCH_ENDPOINT: string = process.env.SEARCH_ENDPOINT || '';
-const SEARCH_KEY: string  = process.env.SEARCH_ADMIN_KEY || '';
+const SEARCH_ENDPOINT: string | undefined = process.env.SEARCH_ENDPOINT || '';
+const SEARCH_KEY: string | undefined = 'KfeNTSs0cYlNJyP8q96Gbh60MGz5VAb4TVZwdPMNN6AzSeCCIQWa' //process.env.SEARCH_ADMIN_KEY || '';
 const SEARCH_INDEX_NAME: string  = process.env.SEARCH_INDEX_NAME || '';
 
+// Create Search service client
+// used to upload docs into Index
 const client = new SearchClient(
   SEARCH_ENDPOINT,
   SEARCH_INDEX_NAME,
@@ -21,15 +23,17 @@ export class CognitiveSearch {
     this.httpResponse = new HttpResponseTypeAdapterFactoryImplementation();    
   }
 
-    async getContexts(conversation: any[], context: Context): Promise<any> {
+    public async getContexts(conversation: any[], context: Context): Promise<any> {
       try {
-          const query = (conversation.length === 1 ? conversation[0] : conversation.join(' OR '));
+        const resultsQuery: any[] = [];
+          const query = (conversation.length === 1 ? conversation[0] : conversation.join(','));
           const searchOptions = {
             includeTotalCount: true,
+            top: 3,
           };
-          const result = await client.search(query, searchOptions);
-          console.log(`Retorna da Consulta aos Indexer: ${JSON.stringify(result, null, 2)}`);
-          return result;        
+          const returnsFromQuery = await client.search(query, searchOptions);
+          for await (const results of returnsFromQuery.results) resultsQuery.push(results.document);
+          return resultsQuery;  
       } catch (error: any) {
         const { message } = error;
         const errorResponse = this.httpResponse.internalServerErrorResponse().getResponse(message);

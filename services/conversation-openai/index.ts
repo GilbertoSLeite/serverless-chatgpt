@@ -7,7 +7,7 @@ const identifyLastTalk = new IdentifyLastTalk();
 export const handler = async (event: any, context: any) => {
   try {
     const { body } = event;
-    const response = identifyLastTalk.identifyLastTalk(body, context);
+    const response = await identifyLastTalk.identifyLastTalk(body, context);
     return httpResponse.successResponse().getResponse(JSON.stringify(response));
   } catch (error: any) {
     const { message } = error;

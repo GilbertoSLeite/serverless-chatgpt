@@ -11,7 +11,7 @@ const identifyLastTalk = new identify_last_talk_1.default();
 const handler = async (event, context) => {
     try {
         const { body } = event;
-        const response = identifyLastTalk.identifyLastTalk(body, context);
+        const response = await identifyLastTalk.identifyLastTalk(body, context);
         return httpResponse.successResponse().getResponse(JSON.stringify(response));
     }
     catch (error) {
