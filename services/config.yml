@@ -1,13 +1,20 @@
 functions:
-  openai:
-    handler: services/openai/index.handler
+  cognitiveSearch:
+    handler: services/cognitive-search/index.handler
     events:
       - http:
-          path: services/openai
+          path: services/cognitive-search
           method: GET
           cors: true
-
+  openai:
+    handler: services/conversation-openai/index.handler
+    events:
+      - http:
+          path: services/conversation-openai
+          method: GET
+          cors: true
+          
 customDomain:
   domainName: 'api.altu.com.br'
-  basePath: 'chatgpt-${self:provider.stage}'
+  basePath: 'zenvia-${self:provider.stage}'
   stage: ${self:provider.stage}
