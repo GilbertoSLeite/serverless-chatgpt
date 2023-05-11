@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class PromptPrefix {
+class FirstInteractionPrompt {
     promptPrefix(textConversation, conversation) {
         const prompt_prefix = `<|im_start|>system
     Use as seguintes peças de contexto para responder no português brasileiro, em tom formal à pergunta no final. Se você não souber a resposta, apenas diga que não sabe. 
@@ -17,4 +17,4 @@ class PromptPrefix {
     }
     ;
 }
-exports.default = PromptPrefix;
+exports.default = FirstInteractionPrompt;
