@@ -1,0 +1,38 @@
+name: Remove
+on:
+  workflow_dispatch:
+    inputs:
+      ambiente:
+        description: 'prod || dev'     
+        required: true
+      service:
+        description: 'servico'     
+        required: true
+jobs:
+  # Label of the container job
+  container-job:
+    # Containers must run in Linux based operating systems
+    runs-on: ubuntu-latest
+    # Docker Hub image that `container-job` executes in
+    container: node:12.14-alpine
+    # Service containers to run with `container-job`       
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v2
+     - name: Install serverless
+       run: npm i -g serverless@2.25.2
+     - name: Configure AWS Credentials
+       uses: aws-actions/configure-aws-credentials@v1
+       with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: sa-east-1
+     - name: Create Env File
+       run: 'echo "$config_${{ github.event.inputs.ambiente }}" > config/env.${{ github.event.inputs.ambiente }}.yml'
+       env:
+        config_prod: ${{secrets.CONFIG_PROD}}
+        config_dev: ${{secrets.CONFIG_DEV}}
+     - name: Install dependencies
+       run: npm install
+     - name: Run remove
+       run:  sls remove -s ${{ github.event.inputs.ambiente }} --config-file services/${{ github.event.inputs.service }}/config.yml

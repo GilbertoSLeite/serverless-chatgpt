@@ -1,5 +1,5 @@
 import { HttpResponseTypeAdapterFactoryImplementation } from "../../../../commons/http-response/http-response-type-adapter-factory";
-import FirstInteractionPrompt from "../../domain/entities/first-interaction-prompt";
+import FirstInteractionPrompt from "../../domain/entities/create-answer-prompt";
 import ConfigurationOpenai from "../../frameworks/adapters/configuration-openai";
 import { CognitiveSearch } from "./consult-context-cognitive-search";
 
@@ -20,12 +20,13 @@ export default class StartConversationOpenai{
     this.conversationOpenai = new ConfigurationOpenai();
   }
 
-  public async startingConversationOpenai(conversation: any[], context: Context){
+  public async createConversationOpenai(conversation: string, context: Context){
     try {
-      const resultContextConversation: any[] = await this.searchConsultConversation.getContexts(conversation, context);
-      const getOnlyContent = resultContextConversation.map(contentData =>  contentData.content).join(',');
-      const createFirstConversationPrompt = this.promptPrefix.promptPrefix(getOnlyContent, conversation.join(','));
-      const responseOpenai = this.conversationOpenai.configureOpenia(createFirstConversationPrompt);
+      const convertedConversationToString = conversation.toString();
+      const resultContextConversation: any[] = await this.searchConsultConversation.sendContext(convertedConversationToString, context);
+      const getOnlyContent = resultContextConversation.map(contentData =>  contentData.content).join(' ');
+      const createFirstConversationPrompt = await this.promptPrefix.createAnswerPrompt(getOnlyContent, conversation);
+      const responseOpenai = await this.conversationOpenai.configureOpenia(createFirstConversationPrompt);
       return responseOpenai;      
     } catch (error: any) {
       const { message } = error;

@@ -1,5 +1,7 @@
-import { AzureKeyCredential, SearchClient } from "@azure/search-documents";
+import { AzureKeyCredential, SearchClient, QueryType } from '@azure/search-documents';
 import { HttpResponseTypeAdapterFactoryImplementation } from '../../../../commons/http-response/http-response-type-adapter-factory';
+import { QueryLanguage } from '@azure/search-documents';
+import { QuerySpellerType } from '@azure/search-documents';
 
 const SEARCH_ENDPOINT: string | undefined = process.env.SEARCH_ENDPOINT || '';
 const SEARCH_KEY: string | undefined = 'KfeNTSs0cYlNJyP8q96Gbh60MGz5VAb4TVZwdPMNN6AzSeCCIQWa' //process.env.SEARCH_ADMIN_KEY || '';
@@ -18,20 +20,24 @@ interface Context {
 }
 export class CognitiveSearch {
   private httpResponse: HttpResponseTypeAdapterFactoryImplementation;
+  private readonly queryType: QueryType = 'semantic'
+  private readonly queryLanguage: QueryLanguage = 'pt-BR'
+  private readonly querySpeller: QuerySpellerType = 'lexicon'
 
   constructor(){
     this.httpResponse = new HttpResponseTypeAdapterFactoryImplementation();    
   }
 
-    public async getContexts(conversation: any[], context: Context): Promise<any> {
+    public async sendContext(question: string, context: Context): Promise<any> {
       try {
         const resultsQuery: any[] = [];
-          const query = (conversation.length === 1 ? conversation[0] : conversation.join(','));
           const searchOptions = {
-            includeTotalCount: true,
             top: 3,
+            includeTotalCount: true,
+            queryType: this.queryType,
+            queryLanguage: this.queryLanguage,
           };
-          const returnsFromQuery = await client.search(query, searchOptions);
+          const returnsFromQuery = await client.search(question, searchOptions)
           for await (const results of returnsFromQuery.results) resultsQuery.push(results.document);
           return resultsQuery;  
       } catch (error: any) {

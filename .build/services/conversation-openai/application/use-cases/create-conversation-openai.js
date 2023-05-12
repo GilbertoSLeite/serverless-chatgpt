@@ -14,12 +14,13 @@ class StartConversationOpenai {
         this.promptPrefix = new create_answer_prompt_1.default();
         this.conversationOpenai = new configuration_openai_1.default();
     }
-    async startingConversationOpenai(conversation, context) {
+    async createConversationOpenai(conversation, context) {
         try {
-            const resultContextConversation = await this.searchConsultConversation.getContexts(conversation, context);
-            const getOnlyContent = resultContextConversation.map(contentData => contentData.content).join(',');
-            const createFirstConversationPrompt = this.promptPrefix.promptPrefix(getOnlyContent, conversation.join(','));
-            const responseOpenai = this.conversationOpenai.configureOpenia(createFirstConversationPrompt);
+            const convertedConversationToString = conversation.toString();
+            const resultContextConversation = await this.searchConsultConversation.sendContext(convertedConversationToString, context);
+            const getOnlyContent = resultContextConversation.map(contentData => contentData.content).join(' ');
+            const createFirstConversationPrompt = await this.promptPrefix.createAnswerPrompt(getOnlyContent, conversation);
+            const responseOpenai = await this.conversationOpenai.configureOpenia(createFirstConversationPrompt);
             return responseOpenai;
         }
         catch (error) {

@@ -1,33 +1,40 @@
 import { HttpResponseTypeAdapterFactoryImplementation } from "../../../../commons/http-response/http-response-type-adapter-factory";
-import OtherInteractionPrompt from "../../domain/entities/other-interaction-prompt";
+import RephrasedQuestionPrompt from "../../domain/entities/rephrased-question-prompt";
 import ConfigurationOpenai from "../../frameworks/adapters/configuration-openai";
-import { CognitiveSearch } from "./consult-context-cognitive-search";
+import StartConversationOpenai from "./create-conversation-openai";
 
 interface Context {
   succeed: (response: any) => void;
 }
 
 export default class InteractionContinuesConversationOpenai{
-  private searchConsultConversation: CognitiveSearch
   private httpResponse: HttpResponseTypeAdapterFactoryImplementation;
-  private promptPrefix: OtherInteractionPrompt;
+  private promptPrefix: RephrasedQuestionPrompt;
   private conversationOpenai: ConfigurationOpenai;
+  private askingAgainRephrased: StartConversationOpenai
 
   constructor(){
     this.httpResponse = new HttpResponseTypeAdapterFactoryImplementation();
-    this.searchConsultConversation = new CognitiveSearch();
-    this.promptPrefix = new OtherInteractionPrompt();
+    this.promptPrefix = new RephrasedQuestionPrompt();
     this.conversationOpenai = new ConfigurationOpenai();
+    this.askingAgainRephrased = new StartConversationOpenai();
   }
 
   public async interactionContinuesConversationOpenai(conversation: any[], context: Context){
     try {
-      const resultContextConversation: any[] = await this.searchConsultConversation.getContexts(conversation, context);
-      const getOnlyContent = resultContextConversation.map(contentData =>  contentData.content).join(',');
-      const lastConversation = conversation[conversation.length - 1];
-      const createFirstConversationPrompt = this.promptPrefix.promptPrefix(getOnlyContent, conversation.join(','), lastConversation);
-      const responseOpenai = this.conversationOpenai.configureOpenia(createFirstConversationPrompt);
-      return responseOpenai;      
+      const lastConversation =  conversation.pop();
+      const regex = /\?$/;
+      const isQuestion = regex.test(lastConversation);
+      if(isQuestion){
+        const finallyResponseOpenai = await this.askingAgainRephrased.createConversationOpenai(lastConversation, context);
+        return finallyResponseOpenai;      
+      };
+      const conversationToString = conversation.join(' , ');
+      const rephrasedText = this.promptPrefix.rephrasedQuestionPrompt(conversationToString, lastConversation);
+      const responseOpenai = await this.conversationOpenai.configureOpenia(rephrasedText);
+      const responseOpenaiToString = responseOpenai.toString();
+      const finallyResponseOpenai = await this.askingAgainRephrased.createConversationOpenai(responseOpenaiToString, context);
+      return finallyResponseOpenai;      
     } catch (error: any) {
       const { message } = error;
       const errorResponse = this.httpResponse.internalServerErrorResponse().getResponse(message);

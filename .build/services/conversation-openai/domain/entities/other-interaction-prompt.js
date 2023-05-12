@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class OtherInteractionPrompt {
-    promptPrefix(textConversation, conversation, lastConversation) {
+    promptPrefix(contextCognitiveSearch, historyConversation, lastUserQuestion) {
         const prompt_prefix = `<|im_start|>system
     Use os seguintes contextos para responder adotando um tom formal, no português brasileiro, a pergunta no final. Se você não souber a resposta, apenas diga que não sabe. 
 
-    ${textConversation}
+    ${contextCognitiveSearch}
 
     Chat History:
-    ${conversation}
+    ${historyConversation}
 
     <|im_end|>
     <|im_start|>user 
-    ${lastConversation} 
+    ${lastUserQuestion} 
 
     <|im_end|>
     <|im_start|>assistant`;

@@ -11,17 +11,21 @@ const SEARCH_INDEX_NAME = process.env.SEARCH_INDEX_NAME || '';
 const client = new search_documents_1.SearchClient(SEARCH_ENDPOINT, SEARCH_INDEX_NAME, new search_documents_1.AzureKeyCredential(SEARCH_KEY));
 class CognitiveSearch {
     constructor() {
+        this.queryType = 'semantic';
+        this.queryLanguage = 'pt-BR';
+        this.querySpeller = 'lexicon';
         this.httpResponse = new http_response_type_adapter_factory_1.HttpResponseTypeAdapterFactoryImplementation();
     }
-    async getContexts(conversation, context) {
+    async sendContext(question, context) {
         try {
             const resultsQuery = [];
-            const query = (conversation.length === 1 ? conversation[0] : conversation.join(','));
             const searchOptions = {
-                includeTotalCount: true,
                 top: 3,
+                includeTotalCount: true,
+                queryType: this.queryType,
+                queryLanguage: this.queryLanguage,
             };
-            const returnsFromQuery = await client.search(query, searchOptions);
+            const returnsFromQuery = await client.search(question, searchOptions);
             for await (const results of returnsFromQuery.results)
                 resultsQuery.push(results.document);
             return resultsQuery;

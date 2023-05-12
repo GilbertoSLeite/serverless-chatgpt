@@ -4,24 +4,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_response_type_adapter_factory_1 = require("../../../../commons/http-response/http-response-type-adapter-factory");
-const other_interaction_prompt_1 = __importDefault(require("../../domain/entities/other-interaction-prompt"));
+const rephrased_question_prompt_1 = __importDefault(require("../../domain/entities/rephrased-question-prompt"));
 const configuration_openai_1 = __importDefault(require("../../frameworks/adapters/configuration-openai"));
-const consult_context_cognitive_search_1 = require("./consult-context-cognitive-search");
+const create_conversation_openai_1 = __importDefault(require("./create-conversation-openai"));
 class InteractionContinuesConversationOpenai {
     constructor() {
         this.httpResponse = new http_response_type_adapter_factory_1.HttpResponseTypeAdapterFactoryImplementation();
-        this.searchConsultConversation = new consult_context_cognitive_search_1.CognitiveSearch();
-        this.promptPrefix = new other_interaction_prompt_1.default();
+        this.promptPrefix = new rephrased_question_prompt_1.default();
         this.conversationOpenai = new configuration_openai_1.default();
+        this.askingAgainRephrased = new create_conversation_openai_1.default();
     }
     async interactionContinuesConversationOpenai(conversation, context) {
         try {
-            const resultContextConversation = await this.searchConsultConversation.getContexts(conversation, context);
-            const getOnlyContent = resultContextConversation.map(contentData => contentData.content).join(',');
-            const lastConversation = conversation[conversation.length - 1];
-            const createFirstConversationPrompt = this.promptPrefix.promptPrefix(getOnlyContent, conversation.join(','), lastConversation);
-            const responseOpenai = this.conversationOpenai.configureOpenia(createFirstConversationPrompt);
-            return responseOpenai;
+            const lastConversation = conversation.pop();
+            const regex = /\?$/;
+            const isQuestion = regex.test(lastConversation);
+            if (isQuestion) {
+                const finallyResponseOpenai = await this.askingAgainRephrased.createConversationOpenai(lastConversation, context);
+                return finallyResponseOpenai;
+            }
+            ;
+            const conversationToString = conversation.join(' , ');
+            const rephrasedText = this.promptPrefix.rephrasedQuestionPrompt(conversationToString, lastConversation);
+            const responseOpenai = await this.conversationOpenai.configureOpenia(rephrasedText);
+            const responseOpenaiToString = responseOpenai.toString();
+            const finallyResponseOpenai = await this.askingAgainRephrased.createConversationOpenai(responseOpenaiToString, context);
+            return finallyResponseOpenai;
         }
         catch (error) {
             const { message } = error;
