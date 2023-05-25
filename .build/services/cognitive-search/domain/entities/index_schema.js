@@ -11,9 +11,9 @@ class IndexSchema {
         this.content = "";
     }
     async setTitleContent(title, content) {
-        this.id = await IndexSchema.generatorUUID.generateId(title);
+        this.id = await IndexSchema.generatorUUID.generateId();
         this.title = title,
-            this.content = JSON.stringify(content, null, 2);
+            this.content = content;
         return {
             id: this.id,
             title: this.title,

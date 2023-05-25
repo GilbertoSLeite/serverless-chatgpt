@@ -9,9 +9,10 @@ class SplitDocChunk {
     async splicDocChunk(docsConvertedPdfToTxt) {
         try {
             const textSplitter = new text_splitter_1.RecursiveCharacterTextSplitter({
-                chunkSize: 1000
+                chunkSize: 300,
+                chunkOverlap: 100
             });
-            const docs = await textSplitter.createDocuments([docsConvertedPdfToTxt]);
+            const docs = (await textSplitter.createDocuments([docsConvertedPdfToTxt])).map((pageContent) => pageContent.pageContent);
             return docs;
         }
         catch (error) {

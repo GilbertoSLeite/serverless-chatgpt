@@ -1,7 +1,6 @@
 import { AzureKeyCredential, SearchClient, QueryType } from '@azure/search-documents';
 import { HttpResponseTypeAdapterFactoryImplementation } from '../../../../commons/http-response/http-response-type-adapter-factory';
 import { QueryLanguage } from '@azure/search-documents';
-import { QuerySpellerType } from '@azure/search-documents';
 
 const SEARCH_ENDPOINT: string | undefined = process.env.SEARCH_ENDPOINT || '';
 const SEARCH_KEY: string | undefined = 'KfeNTSs0cYlNJyP8q96Gbh60MGz5VAb4TVZwdPMNN6AzSeCCIQWa' //process.env.SEARCH_ADMIN_KEY || '';
@@ -22,7 +21,6 @@ export class CognitiveSearch {
   private httpResponse: HttpResponseTypeAdapterFactoryImplementation;
   private readonly queryType: QueryType = 'semantic'
   private readonly queryLanguage: QueryLanguage = 'pt-BR'
-  private readonly querySpeller: QuerySpellerType = 'lexicon'
 
   constructor(){
     this.httpResponse = new HttpResponseTypeAdapterFactoryImplementation();    

@@ -20,7 +20,7 @@ class InteractionContinuesConversationOpenai {
             const regex = /\?$/;
             const isQuestion = regex.test(lastConversation);
             if (isQuestion) {
-                const finallyResponseOpenai = await this.askingAgainRephrased.createConversationOpenai(lastConversation, context);
+                const finallyResponseOpenai = await this.askingAgainRephrased.createConversationOpenai(lastConversation, 'a', context);
                 return finallyResponseOpenai;
             }
             ;
@@ -28,7 +28,7 @@ class InteractionContinuesConversationOpenai {
             const rephrasedText = this.promptPrefix.rephrasedQuestionPrompt(conversationToString, lastConversation);
             const responseOpenai = await this.conversationOpenai.configureOpenia(rephrasedText);
             const responseOpenaiToString = responseOpenai.toString();
-            const finallyResponseOpenai = await this.askingAgainRephrased.createConversationOpenai(responseOpenaiToString, context);
+            const finallyResponseOpenai = await this.askingAgainRephrased.createConversationOpenai(responseOpenaiToString, 'a', context);
             return finallyResponseOpenai;
         }
         catch (error) {

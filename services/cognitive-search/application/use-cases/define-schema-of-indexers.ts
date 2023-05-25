@@ -12,9 +12,9 @@ export default class DefineSchemaIndexers {
   }
   public async defineSchemaIndexers(documentFormatText: any[]){
     try {
-      const arrayPromise = [];
+      const arrayPromise: any[] = [];
       for (const iteratorDocument of documentFormatText) {
-        const promisesIndexSchema = this.indexSchema.setTitleContent('Manual do Correto', iteratorDocument.pageContent);
+        const promisesIndexSchema = this.indexSchema.setTitleContent('ZchatManual', iteratorDocument);
         arrayPromise.push(promisesIndexSchema);
       }
       const entityIndexers = await Promise.all(arrayPromise);

@@ -9,7 +9,7 @@ class ConfigurationOpenai {
     constructor() {
         this.httpResponse = new http_response_type_adapter_factory_1.HttpResponseTypeAdapterFactoryImplementation();
     }
-    async configureOpenia(promptPrefix) {
+    async configureOpenia(promptPrefix, context) {
         try {
             const configuration = new openai_1.Configuration({
                 apiKey,
@@ -29,9 +29,9 @@ class ConfigurationOpenai {
                 prompt: promptPrefix,
                 temperature: 0,
                 max_tokens: 350,
-                top_p: 1.0,
-                frequency_penalty: 0.0,
-                presence_penalty: 0.0,
+                top_p: 0.5,
+                frequency_penalty: 0.8,
+                presence_penalty: 1,
                 stop: ["\"\"\""],
             });
             const regex = /<\|im_end\|>/g;
@@ -41,7 +41,7 @@ class ConfigurationOpenai {
         catch (error) {
             const { message } = error;
             const errorResponse = this.httpResponse.internalServerErrorResponse().getResponse(message);
-            return errorResponse;
+            return context.succeed(errorResponse);
         }
     }
 }

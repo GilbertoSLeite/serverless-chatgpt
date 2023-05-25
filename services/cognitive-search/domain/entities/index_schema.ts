@@ -14,10 +14,10 @@ export default class IndexSchema {
     this.content = "";
   }
 
-  public async setTitleContent(title: string, content: object){
-    this.id = await IndexSchema.generatorUUID.generateId(title);
+  public async setTitleContent(title: string, content: string){
+    this.id = await IndexSchema.generatorUUID.generateId();
     this.title = title,
-    this.content = JSON.stringify(content, null, 2)
+    this.content = content
     return {
       id: this.id,
       title: this.title,

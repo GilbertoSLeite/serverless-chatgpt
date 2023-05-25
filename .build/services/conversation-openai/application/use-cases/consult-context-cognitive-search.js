@@ -13,7 +13,6 @@ class CognitiveSearch {
     constructor() {
         this.queryType = 'semantic';
         this.queryLanguage = 'pt-BR';
-        this.querySpeller = 'lexicon';
         this.httpResponse = new http_response_type_adapter_factory_1.HttpResponseTypeAdapterFactoryImplementation();
     }
     async sendContext(question, context) {
@@ -25,6 +24,7 @@ class CognitiveSearch {
                 queryType: this.queryType,
                 queryLanguage: this.queryLanguage,
             };
+            console.log(`Esse é o contexto que irá para o Cognitive Search: ${question}`);
             const returnsFromQuery = await client.search(question, searchOptions);
             for await (const results of returnsFromQuery.results)
                 resultsQuery.push(results.document);
