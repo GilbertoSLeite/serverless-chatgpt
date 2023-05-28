@@ -23,8 +23,8 @@ class CognitiveSearch {
                 includeTotalCount: true,
                 queryType: this.queryType,
                 queryLanguage: this.queryLanguage,
+                semanticConfiguration: SEARCH_INDEX_NAME
             };
-            console.log(`Esse é o contexto que irá para o Cognitive Search: ${question}`);
             const returnsFromQuery = await client.search(question, searchOptions);
             for await (const results of returnsFromQuery.results)
                 resultsQuery.push(results.document);

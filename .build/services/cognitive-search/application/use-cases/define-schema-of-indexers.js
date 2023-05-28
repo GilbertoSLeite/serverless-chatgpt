@@ -14,7 +14,7 @@ class DefineSchemaIndexers {
         try {
             const arrayPromise = [];
             for (const iteratorDocument of documentFormatText) {
-                const promisesIndexSchema = this.indexSchema.setTitleContent('ZchatManual', iteratorDocument);
+                const promisesIndexSchema = this.indexSchema.setTitleContent('assistcard', iteratorDocument);
                 arrayPromise.push(promisesIndexSchema);
             }
             const entityIndexers = await Promise.all(arrayPromise);

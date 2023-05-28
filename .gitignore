@@ -2,9 +2,6 @@
 node_modules
 jspm_packages
 
-# Serverless directories
-.serverless
-
 # Dist directories
 .webpack
 
@@ -25,10 +22,11 @@ config/aws/credentials
 #config
 # serverless.yml
 
+#Typescript
+.build
 
 # Teste Coverage
 coverage
 .nyc_output
 
 package-lock.json
-serverless.yml

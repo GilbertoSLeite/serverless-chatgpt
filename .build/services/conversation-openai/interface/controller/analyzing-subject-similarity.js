@@ -35,7 +35,7 @@ class SubjectAnalyzer {
                     continue;
                 }
                 const similaridade = similarity.compareTwoStrings(frase1.replace(regex, ''), frase2.replace(regex, ''));
-                if (similaridade > 0.8) {
+                if (similaridade > 0.9) {
                     if (!assuntosConvergentes.includes(frase1.replace(regex, ''))) {
                         assuntosConvergentes.push(frase1.replace(regex, ''));
                     }

@@ -10,11 +10,13 @@ class IdentifyLastTalk {
         this.httpResponse = new http_response_type_adapter_factory_1.HttpResponseTypeAdapterFactoryImplementation();
         this.triggerConversation = new create_conversation_openai_1.default();
     }
-    async identifyLastTalk(similarConversation, ultimaFrase, context) {
+    async identifyLastTalk(similarConversation, ultimaFrase, openai, context) {
         try {
             const regex = /[\\"]/g;
             const cleanSimilarConversation = similarConversation.replace(regex, '');
-            const response = await this.triggerConversation.createConversationOpenai(cleanSimilarConversation, ultimaFrase, context);
+            console.time('createConversationOpenai');
+            const response = await this.triggerConversation.createConversationOpenai(cleanSimilarConversation, ultimaFrase, openai, context);
+            console.timeEnd('createConversationOpenai');
             return response;
         }
         catch (error) {

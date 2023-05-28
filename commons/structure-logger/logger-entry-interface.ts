@@ -8,7 +8,7 @@ export interface LogEntry {
   message: string;
   transactionId?: string | null | undefined;
   context?: {
-    [key: string]: string | number | boolean | null | object | undefined 
+    [key: string]: string | number | boolean | null | object | undefined | void
   };
 }
 

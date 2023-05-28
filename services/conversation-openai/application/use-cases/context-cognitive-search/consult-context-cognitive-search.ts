@@ -1,9 +1,9 @@
 import { AzureKeyCredential, SearchClient, QueryType } from '@azure/search-documents';
-import { HttpResponseTypeAdapterFactoryImplementation } from '../../../../commons/http-response/http-response-type-adapter-factory';
+import { HttpResponseTypeAdapterFactoryImplementation } from '../../../../../commons/http-response/http-response-type-adapter-factory';
 import { QueryLanguage } from '@azure/search-documents';
 
 const SEARCH_ENDPOINT: string | undefined = process.env.SEARCH_ENDPOINT || '';
-const SEARCH_KEY: string | undefined = 'KfeNTSs0cYlNJyP8q96Gbh60MGz5VAb4TVZwdPMNN6AzSeCCIQWa' //process.env.SEARCH_ADMIN_KEY || '';
+const SEARCH_KEY: string | undefined = process.env.SEARCH_ADMIN_KEY || '';
 const SEARCH_INDEX_NAME: string  = process.env.SEARCH_INDEX_NAME || '';
 
 // Create Search service client
@@ -34,6 +34,7 @@ export class CognitiveSearch {
             includeTotalCount: true,
             queryType: this.queryType,
             queryLanguage: this.queryLanguage,
+            semanticConfiguration: SEARCH_INDEX_NAME
           };
           const returnsFromQuery = await client.search(question, searchOptions)
           for await (const results of returnsFromQuery.results) resultsQuery.push(results.document);

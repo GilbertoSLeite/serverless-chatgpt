@@ -8,7 +8,7 @@ export class InfoLogger  {
     message: string,
     transactionId?: string | null,
     context?: { 
-      [key: string]: string | number | boolean | null | object | undefined 
+      [key: string]: string | number | boolean | null | object | undefined | void
     }) {
     const timestamp = this.preparingLogger.parseISODate(this.preparingLogger.formatDate(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"));
 

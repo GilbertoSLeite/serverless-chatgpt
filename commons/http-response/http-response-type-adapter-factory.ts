@@ -4,7 +4,7 @@ import { InternalServerErrorResponse } from './http-response-types/internal-serv
 import { NotFoundResponse } from './http-response-types/not-found-response';
 import { OkResponse } from './http-response-types/ok-response';
 
-interface HttpResponseTypeAdapterFactory {
+export default interface HttpResponseTypeAdapterFactory {
   badRequestResponse(): BadRequestResponse
   notFoundResponse(): NotFoundResponse
   forbiddenResponse(): ForbiddenResponse
