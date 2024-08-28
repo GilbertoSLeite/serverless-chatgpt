@@ -13,8 +13,3 @@ functions:
           path: services/conversation-openai
           method: POST
           cors: true
-          
-customDomain:
-  domainName: 'api.altu.com.br'
-  basePath: 'zenvia-${self:provider.stage}'
-  stage: ${self:provider.stage}
